@@ -1,0 +1,12 @@
+version: "3.2"
+services:
+  postgres:
+    image: postgres:14.1-alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "Postgres2022!"
+      POSTGRES_DB: auction
+      POSTGRES_USER: auction
+    ports:
+      - "5432:5432"
