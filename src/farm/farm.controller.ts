@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Query, Param, Post } from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
+import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
 import { DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
 import { FarmService } from './farm.service';
 import { Farm } from './farm.entity';
@@ -7,26 +8,26 @@ import { Response } from '../response.interface';
 
 @Controller('farm')
 export class FarmController {
-  constructor(private readonly logService: FarmService) {}
+  constructor(private readonly farmService: FarmService) {}
 
-  @Get('')
+  @TypedRoute.Get('')
   async findAll(
     @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
     @Query('limit', new DefaultValuePipe(15), ParseIntPipe) limit: number,
     @Query('order', new DefaultValuePipe(0), ParseIntPipe) order: number,
   ): Promise<Response<Farm>> {
-    const logs = await this.logService.findAll(offset, limit, order);
-    const total = await this.logService.countTotal();
+    const logs = await this.farmService.findAll(offset, limit, order);
+    const total = await this.farmService.countTotal();
     return { items: logs, total };
   }
 
-  @Get('/:id')
-  async findOne(@Param('id') id: number): Promise<Farm> {
-    return this.logService.findOne(id);
+  @TypedRoute.Get('/:id')
+  async findOne(@TypedParam('id') id: number): Promise<Farm> {
+    return this.farmService.findOne(id);
   }
 
-  @Post('')
-  async create(@Body() createLogDto: CreateFarmDto): Promise<Farm> {
-    return this.logService.create(createLogDto);
+  @TypedRoute.Post('')
+  async create(@TypedBody() createLogDto: CreateFarmDto): Promise<Farm> {
+    return this.farmService.create(createLogDto);
   }
 }
